@@ -1,0 +1,2 @@
+QUERY q1 = <apple banana>;
+EXEC q1;
