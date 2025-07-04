@@ -1,12 +1,13 @@
 %{
 #include "parser.tab.h"
 #include <string.h>
+
 int line_number = 1;
 %}
 
 %%
 
-[ \t\r]+                ;  // Ignoriši razmake i tabove
+[ \t\r]+                ;
 \n                      { line_number++; }
 
 "QUERY"                 { return QUERY; }
@@ -50,7 +51,9 @@ int line_number = 1;
                           return WORD;
                         }
 
-.                       { printf("Nepoznat znak: %s\n", yytext); }
+.                       {
+                          printf("Nepoznat znak: %s\n", yytext);
+                        }
 
 %%
 

@@ -1,11 +1,16 @@
 %{
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "ast.h"
 
+
 int yylex();
 void yyerror(const char *s);
+extern int yylineno;
 %}
 
 %union {
@@ -20,7 +25,8 @@ void yyerror(const char *s);
 %token PLUSPLUS MINUSMINUS STARSTAR
 %token LT GT LBRACKET RBRACKET LPAREN RPAREN
 
-%type <ast> program declarations declaration commands command query terms term
+%type <ast> program declarations declaration commands command assign_command query terms term query_list condition
+%type <string> set_operator
 
 %%
 
@@ -28,7 +34,7 @@ program
     : declarations commands {
         $$ = create_program_node($1, $2);
         printf("Program validan!\n");
-        print_ast($$, 0);  // Dodaj ispis AST-a
+        print_ast($$, 0);
     };
 
 declarations
@@ -49,10 +55,36 @@ commands
 
 command
     : EXEC WORD SEMICOLON              { $$ = create_exec_command_node($2); }
+    | assign_command SEMICOLON         { $$ = $1; }
+    | FOR WORD IN LBRACKET query_list RBRACKET BEGIN_BLOCK commands END {
+        $$ = create_for_command_node($2, $5, $8);
+    }
+    | IF condition BEGIN_BLOCK commands END {
+    $$ = create_if_command_node($2, $4);
+}
+    ;
+
+
+assign_command
+    : WORD EQUAL EXEC WORD             { $$ = create_assign_exec_command_node($1, $4); }
+    | WORD EQUAL WORD set_operator WORD {
+        $$ = create_set_operation_node($1, $3, $4, $5);
+    }
+    ;
+
+set_operator
+    : PLUSPLUS                         { $$ = strdup("++"); }
+    | MINUSMINUS                       { $$ = strdup("--"); }
+    | STARSTAR                         { $$ = strdup("**"); }
     ;
 
 query
     : LT terms GT                      { $$ = create_query_node($2); }
+    ;
+
+query_list
+    : WORD                             { $$ = create_query_list_node($1, NULL); }
+    | query_list COMMA WORD            { $$ = add_query_to_list($1, $3); }
     ;
 
 terms
@@ -65,8 +97,16 @@ term
     | STRING                           { $$ = create_term_node($1); }
     ;
 
+condition
+    : EMPTY LPAREN WORD RPAREN         { $$ = create_condition_node("EMPTY", $3, NULL); }
+    | NOT_EMPTY LPAREN WORD RPAREN     { $$ = create_condition_node("NOT_EMPTY", $3, NULL); }
+    | URL_EXISTS LPAREN WORD COMMA STRING RPAREN {
+        $$ = create_condition_node("URL_EXISTS", $3, $5);
+    }
+    ;
+
 %%
 
 void yyerror(const char* s) {
-    fprintf(stderr, "Greška: %s\n", s);
+    fprintf(stderr, "Greska: %s (na liniji %d)\n", s, yylineno);
 }

@@ -1,2 +1,3 @@
-QUERY q1 = <apple banana>;
-EXEC q1;
+IF EMPTY(res) BEGIN
+    EXEC q1;
+END
