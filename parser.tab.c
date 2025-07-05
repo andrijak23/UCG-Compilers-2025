@@ -542,12 +542,12 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,    32,    32,    41,    42,    46,    49,    52,    58,    59,
-      63,    64,    65,    68,    74,    75,    76,    77,    81,    82,
-      86,    87,    91,    92,    96,    97,    98,    99,   100,   101,
-     105,   106,   110,   111,   115,   119,   120,   121
+       0,    33,    33,    42,    43,    47,    50,    53,    59,    60,
+      64,    65,    66,    69,    75,    78,    81,    84,    90,    91,
+      95,    96,   100,   101,   105,   106,   107,   108,   109,   110,
+     114,   115,   119,   120,   124,   128,   129,   130
 };
 #endif
 
@@ -1163,7 +1163,7 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: declarations commands  */
-#line 32 "parser.y"
+#line 33 "parser.y"
                             {
         if (!syntax_error) {
             (yyval.ast) = create_program_node((yyvsp[-1].ast), (yyvsp[0].ast));
@@ -1175,19 +1175,19 @@ yyreduce:
     break;
 
   case 3: /* declarations: declaration  */
-#line 41 "parser.y"
+#line 42 "parser.y"
                                        { (yyval.ast) = create_declarations_node((yyvsp[0].ast), NULL); }
 #line 1181 "parser.tab.c"
     break;
 
   case 4: /* declarations: declarations declaration  */
-#line 42 "parser.y"
+#line 43 "parser.y"
                                        { (yyval.ast) = add_declaration((yyvsp[-1].ast), (yyvsp[0].ast)); }
 #line 1187 "parser.tab.c"
     break;
 
   case 5: /* declaration: QUERY WORD ASSIGN query SEMICOLON  */
-#line 46 "parser.y"
+#line 47 "parser.y"
                                         {
         (yyval.ast) = create_query_declaration_node((yyvsp[-3].string), (yyvsp[-1].ast));
     }
@@ -1195,7 +1195,7 @@ yyreduce:
     break;
 
   case 6: /* declaration: QUERY WORD ASSIGN list_of_queries SEMICOLON  */
-#line 49 "parser.y"
+#line 50 "parser.y"
                                                   {
         (yyval.ast) = create_query_list_declaration_node((yyvsp[-3].string), (yyvsp[-1].ast));
     }
@@ -1203,7 +1203,7 @@ yyreduce:
     break;
 
   case 7: /* declaration: RESULT_OF_QUERY WORD SEMICOLON  */
-#line 52 "parser.y"
+#line 53 "parser.y"
                                      {
         (yyval.ast) = create_result_of_query_declaration_node((yyvsp[-1].string));
     }
@@ -1211,31 +1211,31 @@ yyreduce:
     break;
 
   case 8: /* commands: command  */
-#line 58 "parser.y"
+#line 59 "parser.y"
                                        { (yyval.ast) = create_commands_node((yyvsp[0].ast), NULL); }
 #line 1217 "parser.tab.c"
     break;
 
   case 9: /* commands: commands command  */
-#line 59 "parser.y"
+#line 60 "parser.y"
                                        { (yyval.ast) = add_command((yyvsp[-1].ast), (yyvsp[0].ast)); }
 #line 1223 "parser.tab.c"
     break;
 
   case 10: /* command: EXEC WORD SEMICOLON  */
-#line 63 "parser.y"
+#line 64 "parser.y"
                                        { (yyval.ast) = create_exec_command_node((yyvsp[-1].string)); }
 #line 1229 "parser.tab.c"
     break;
 
   case 11: /* command: assign_command SEMICOLON  */
-#line 64 "parser.y"
+#line 65 "parser.y"
                                        { (yyval.ast) = (yyvsp[-1].ast); }
 #line 1235 "parser.tab.c"
     break;
 
   case 12: /* command: FOR WORD IN list_of_queries BININGI commands ENDERDIR  */
-#line 65 "parser.y"
+#line 66 "parser.y"
                                                             {
         (yyval.ast) = create_for_command_node((yyvsp[-5].string), (yyvsp[-3].ast), (yyvsp[-1].ast));
     }
@@ -1243,7 +1243,7 @@ yyreduce:
     break;
 
   case 13: /* command: IF condition BININGI commands ENDERDIR  */
-#line 68 "parser.y"
+#line 69 "parser.y"
                                              {
         (yyval.ast) = create_if_command_node((yyvsp[-3].ast), (yyvsp[-1].ast));
     }
@@ -1251,153 +1251,161 @@ yyreduce:
     break;
 
   case 14: /* assign_command: WORD ASSIGN EXEC WORD  */
-#line 74 "parser.y"
-                                                { (yyval.ast) = create_assign_exec_command_node((yyvsp[-3].string), (yyvsp[0].string)); }
-#line 1257 "parser.tab.c"
+#line 75 "parser.y"
+                            {
+        (yyval.ast) = create_assign_exec_command_node((yyvsp[-3].string), (yyvsp[0].string));
+    }
+#line 1259 "parser.tab.c"
     break;
 
   case 15: /* assign_command: WORD ASSIGN WORD SET_UNION WORD  */
-#line 75 "parser.y"
-                                                { (yyval.ast) = create_set_operation_node((yyvsp[-4].string), (yyvsp[-2].string), "SET_UNION", (yyvsp[0].string)); }
-#line 1263 "parser.tab.c"
+#line 78 "parser.y"
+                                      {
+        (yyval.ast) = create_set_operation_node((yyvsp[-4].string), (yyvsp[-2].string), "SET_UNION", (yyvsp[0].string));
+    }
+#line 1267 "parser.tab.c"
     break;
 
   case 16: /* assign_command: WORD ASSIGN WORD SET_DIFFERENCE WORD  */
-#line 76 "parser.y"
-                                                { (yyval.ast) = create_set_operation_node((yyvsp[-4].string), (yyvsp[-2].string), "SET_DIFFERENCE", (yyvsp[0].string)); }
-#line 1269 "parser.tab.c"
-    break;
-
-  case 17: /* assign_command: WORD ASSIGN WORD SET_INTERSECTION WORD  */
-#line 77 "parser.y"
-                                                { (yyval.ast) = create_set_operation_node((yyvsp[-4].string), (yyvsp[-2].string), "SET_INTERSECTION", (yyvsp[0].string)); }
+#line 81 "parser.y"
+                                           {
+        (yyval.ast) = create_set_operation_node((yyvsp[-4].string), (yyvsp[-2].string), "SET_DIFFERENCE", (yyvsp[0].string));
+    }
 #line 1275 "parser.tab.c"
     break;
 
+  case 17: /* assign_command: WORD ASSIGN WORD SET_INTERSECTION WORD  */
+#line 84 "parser.y"
+                                             {
+        (yyval.ast) = create_set_operation_node((yyvsp[-4].string), (yyvsp[-2].string), "SET_INTERSECTION", (yyvsp[0].string));
+    }
+#line 1283 "parser.tab.c"
+    break;
+
   case 18: /* query: LANGLE query_expr RANGLE  */
-#line 81 "parser.y"
-                                              { (yyval.ast) = create_query_node((yyvsp[-1].ast)); }
-#line 1281 "parser.tab.c"
+#line 90 "parser.y"
+                                       { (yyval.ast) = create_query_node((yyvsp[-1].ast)); }
+#line 1289 "parser.tab.c"
     break;
 
   case 19: /* query: WORD  */
-#line 82 "parser.y"
-                                              { (yyval.ast) = create_query_reference_node((yyvsp[0].string)); }
-#line 1287 "parser.tab.c"
+#line 91 "parser.y"
+                                       { (yyval.ast) = create_query_reference_node((yyvsp[0].string)); }
+#line 1295 "parser.tab.c"
     break;
 
   case 20: /* query_expr: concat_expr  */
-#line 86 "parser.y"
-                                              { (yyval.ast) = (yyvsp[0].ast); }
-#line 1293 "parser.tab.c"
+#line 95 "parser.y"
+                                       { (yyval.ast) = (yyvsp[0].ast); }
+#line 1301 "parser.tab.c"
     break;
 
   case 21: /* query_expr: query_expr PIPE concat_expr  */
-#line 87 "parser.y"
-                                              { (yyval.ast) = create_binary_term_node("PIPE", (yyvsp[-2].ast), (yyvsp[0].ast)); }
-#line 1299 "parser.tab.c"
+#line 96 "parser.y"
+                                       { (yyval.ast) = create_binary_term_node("PIPE", (yyvsp[-2].ast), (yyvsp[0].ast)); }
+#line 1307 "parser.tab.c"
     break;
 
   case 22: /* concat_expr: term  */
-#line 91 "parser.y"
-                                              { (yyval.ast) = create_terms_node((yyvsp[0].ast), NULL); }
-#line 1305 "parser.tab.c"
+#line 100 "parser.y"
+                                       { (yyval.ast) = (yyvsp[0].ast); }
+#line 1313 "parser.tab.c"
     break;
 
   case 23: /* concat_expr: concat_expr term  */
-#line 92 "parser.y"
-                                              { (yyval.ast) = add_term_to_concat((yyvsp[-1].ast), (yyvsp[0].ast)); }
-#line 1311 "parser.tab.c"
+#line 101 "parser.y"
+                                       { (yyval.ast) = create_juxtaposition_node((yyvsp[-1].ast), (yyvsp[0].ast)); }
+#line 1319 "parser.tab.c"
     break;
 
   case 24: /* term: WORD  */
-#line 96 "parser.y"
-                                              { (yyval.ast) = create_term_node((yyvsp[0].string)); }
-#line 1317 "parser.tab.c"
+#line 105 "parser.y"
+                                       { (yyval.ast) = create_term_node((yyvsp[0].string)); }
+#line 1325 "parser.tab.c"
     break;
 
   case 25: /* term: STRING  */
-#line 97 "parser.y"
-                                              { (yyval.ast) = create_term_node((yyvsp[0].string)); }
-#line 1323 "parser.tab.c"
+#line 106 "parser.y"
+                                       { (yyval.ast) = create_term_node((yyvsp[0].string)); }
+#line 1331 "parser.tab.c"
     break;
 
   case 26: /* term: directive  */
-#line 98 "parser.y"
-                                              { (yyval.ast) = create_term_directive_node((yyvsp[0].ast)); }
-#line 1329 "parser.tab.c"
+#line 107 "parser.y"
+                                       { (yyval.ast) = create_term_directive_node((yyvsp[0].ast)); }
+#line 1337 "parser.tab.c"
     break;
 
   case 27: /* term: PLUS term  */
-#line 99 "parser.y"
-                                              { (yyval.ast) = create_unary_term_node("PLUS", (yyvsp[0].ast)); }
-#line 1335 "parser.tab.c"
+#line 108 "parser.y"
+                                       { (yyval.ast) = create_unary_term_node("PLUS", (yyvsp[0].ast)); }
+#line 1343 "parser.tab.c"
     break;
 
   case 28: /* term: MINUS term  */
-#line 100 "parser.y"
-                                              { (yyval.ast) = create_unary_term_node("MINUS", (yyvsp[0].ast)); }
-#line 1341 "parser.tab.c"
+#line 109 "parser.y"
+                                       { (yyval.ast) = create_unary_term_node("MINUS", (yyvsp[0].ast)); }
+#line 1349 "parser.tab.c"
     break;
 
   case 29: /* term: STAR term  */
-#line 101 "parser.y"
-                                              { (yyval.ast) = create_unary_term_node("STAR", (yyvsp[0].ast)); }
-#line 1347 "parser.tab.c"
+#line 110 "parser.y"
+                                       { (yyval.ast) = create_unary_term_node("STAR", (yyvsp[0].ast)); }
+#line 1355 "parser.tab.c"
     break;
 
   case 30: /* directive: WORD COLON WORD  */
-#line 105 "parser.y"
-                                              { (yyval.ast) = create_directive_node((yyvsp[-2].string), (yyvsp[0].string)); }
-#line 1353 "parser.tab.c"
+#line 114 "parser.y"
+                                       { (yyval.ast) = create_directive_node((yyvsp[-2].string), (yyvsp[0].string)); }
+#line 1361 "parser.tab.c"
     break;
 
   case 31: /* directive: WORD COLON STRING  */
-#line 106 "parser.y"
-                                              { (yyval.ast) = create_directive_node((yyvsp[-2].string), (yyvsp[0].string)); }
-#line 1359 "parser.tab.c"
+#line 115 "parser.y"
+                                       { (yyval.ast) = create_directive_node((yyvsp[-2].string), (yyvsp[0].string)); }
+#line 1367 "parser.tab.c"
     break;
 
   case 32: /* query_list: query  */
-#line 110 "parser.y"
-                                              { (yyval.ast) = create_query_list_node((yyvsp[0].ast), NULL); }
-#line 1365 "parser.tab.c"
+#line 119 "parser.y"
+                                       { (yyval.ast) = create_query_list_node((yyvsp[0].ast), NULL); }
+#line 1373 "parser.tab.c"
     break;
 
   case 33: /* query_list: query_list COMMA query  */
-#line 111 "parser.y"
-                                              { (yyval.ast) = add_query_to_list((yyvsp[-2].ast), (yyvsp[0].ast)); }
-#line 1371 "parser.tab.c"
+#line 120 "parser.y"
+                                       { (yyval.ast) = add_query_to_list((yyvsp[-2].ast), (yyvsp[0].ast)); }
+#line 1379 "parser.tab.c"
     break;
 
   case 34: /* list_of_queries: LBRACKET query_list RBRACKET  */
-#line 115 "parser.y"
-                                              { (yyval.ast) = create_list_of_queries_node((yyvsp[-1].ast)); }
-#line 1377 "parser.tab.c"
+#line 124 "parser.y"
+                                       { (yyval.ast) = create_list_of_queries_node((yyvsp[-1].ast)); }
+#line 1385 "parser.tab.c"
     break;
 
   case 35: /* condition: EMPTY LPAREN WORD RPAREN  */
-#line 119 "parser.y"
-                                              { (yyval.ast) = create_condition_node("EMPTY", (yyvsp[-1].string), NULL); }
-#line 1383 "parser.tab.c"
+#line 128 "parser.y"
+                                       { (yyval.ast) = create_condition_node("EMPTY", (yyvsp[-1].string), NULL); }
+#line 1391 "parser.tab.c"
     break;
 
   case 36: /* condition: NOT_EMPTY LPAREN WORD RPAREN  */
-#line 120 "parser.y"
-                                              { (yyval.ast) = create_condition_node("NOT_EMPTY", (yyvsp[-1].string), NULL); }
-#line 1389 "parser.tab.c"
-    break;
-
-  case 37: /* condition: URL_EXISTS LPAREN WORD COMMA STRING RPAREN  */
-#line 121 "parser.y"
-                                                 {
-        (yyval.ast) = create_condition_node("URL_EXISTS", (yyvsp[-3].string), (yyvsp[-1].string));
-    }
+#line 129 "parser.y"
+                                       { (yyval.ast) = create_condition_node("NOT_EMPTY", (yyvsp[-1].string), NULL); }
 #line 1397 "parser.tab.c"
     break;
 
+  case 37: /* condition: URL_EXISTS LPAREN WORD COMMA STRING RPAREN  */
+#line 130 "parser.y"
+                                                 {
+        (yyval.ast) = create_condition_node("URL_EXISTS", (yyvsp[-3].string), (yyvsp[-1].string));
+    }
+#line 1405 "parser.tab.c"
+    break;
 
-#line 1401 "parser.tab.c"
+
+#line 1409 "parser.tab.c"
 
       default: break;
     }
@@ -1590,7 +1598,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 126 "parser.y"
+#line 135 "parser.y"
 
 
 void yyerror(const char* s) {
