@@ -1,62 +1,78 @@
 %{
+#include "location.h"
+#include "ast.h"
 #include "parser.tab.h"
-#include <string.h>
+#include "errors.h"
+#include "scanner.h"
 
-int line_number = 1;
+int column = 1;
+#define YY_USER_ACTION \
+    yylloc.first_line   = yylloc.last_line   = yylineno; \
+    yylloc.first_column = column;                        \
+    yylloc.last_column  = column + yyleng - 1;           \
+    column += yyleng;
+
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+YYLTYPE yylloc;
 %}
+
+%option noyywrap yylineno
 
 %%
 
-[ \t\r]+                ;
-\n                      { line_number++; }
+[ \t\r]+                ;                     // ignoriši whitespace
+\n                      { column = 1; }
 
-"QUERY"                 { return QUERY; }
-"RESULT_OF_QUERY"       { return RESULT_OF_QUERY; }
-"EXEC"                  { return EXEC; }
-"IF"                    { return IF; }
-"FOR"                   { return FOR; }
-"IN"                    { return IN; }
-"BEGIN"                 { return BEGIN_BLOCK; }
-"END"                   { return END; }
-"EMPTY"                 { return EMPTY; }
-"NOT_EMPTY"             { return NOT_EMPTY; }
-"URL_EXISTS"            { return URL_EXISTS; }
+"QUERY"                 { YY_USER_ACTION; return QUERY; }
+"RESULT_OF_QUERY"       { YY_USER_ACTION; return RESULT_OF_QUERY; }
+"EXEC"                  { YY_USER_ACTION; return EXEC; }
+"IF"                    { YY_USER_ACTION; return IF; }
+"FOR"                   { YY_USER_ACTION; return FOR; }
+"IN"                    { YY_USER_ACTION; return IN; }
+"BEGIN"                 { YY_USER_ACTION; return BININGI; }
+"END"                   { YY_USER_ACTION; return ENDERDIR; }
 
-"++"                    { return PLUSPLUS; }
-"--"                    { return MINUSMINUS; }
-"**"                    { return STARSTAR; }
-"+"                     { return PLUS; }
-"-"                     { return MINUS; }
-"*"                     { return STAR; }
-"|"                     { return PIPE; }
-"="                     { return EQUAL; }
-":"                     { return COLON; }
-";"                     { return SEMICOLON; }
-","                     { return COMMA; }
+"EMPTY"                 { YY_USER_ACTION; return EMPTY; }
+"NOT_EMPTY"             { YY_USER_ACTION; return NOT_EMPTY; }
+"URL_EXISTS"            { YY_USER_ACTION; return URL_EXISTS; }
 
-"<"                     { return LT; }
-">"                     { return GT; }
-"["                     { return LBRACKET; }
-"]"                     { return RBRACKET; }
-"("                     { return LPAREN; }
-")"                     { return RPAREN; }
+"++"                    { YY_USER_ACTION; return SET_UNION; }
+"--"                    { YY_USER_ACTION; return SET_DIFFERENCE; }
+"**"                    { YY_USER_ACTION; return SET_INTERSECTION; }
 
-\"([^\\\"]|\\.)*\"      {
+"+"                     { YY_USER_ACTION; return PLUS; }
+"-"                     { YY_USER_ACTION; return MINUS; }
+"*"                     { YY_USER_ACTION; return STAR; }
+"|"                     { YY_USER_ACTION; return PIPE; }
+"="                     { YY_USER_ACTION; return ASSIGN; }
+":"                     { YY_USER_ACTION; return COLON; }
+";"                     { YY_USER_ACTION; return SEMICOLON; }
+","                     { YY_USER_ACTION; return COMMA; }
+"<"                     { YY_USER_ACTION; return LANGLE; }
+">"                     { YY_USER_ACTION; return RANGLE; }
+"["                     { YY_USER_ACTION; return LBRACKET; }
+"]"                     { YY_USER_ACTION; return RBRACKET; }
+"("                     { YY_USER_ACTION; return LPAREN; }
+")"                     { YY_USER_ACTION; return RPAREN; }
+
+\"[^\"\n]*\"            {
+                          YY_USER_ACTION;
                           yylval.string = strdup(yytext);
                           return STRING;
                         }
 
 [a-zA-Z_][a-zA-Z0-9_]*   {
+                          YY_USER_ACTION;
                           yylval.string = strdup(yytext);
                           return WORD;
                         }
 
 .                       {
-                          printf("Nepoznat znak: %s\n", yytext);
+                          YY_USER_ACTION;
+                          report_lexical_error("Nepoznat simbol", yylineno, column);
                         }
 
 %%
 
-int yywrap() {
-    return 1;
-}

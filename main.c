@@ -14,20 +14,22 @@ int main(int argc, char* argv[]) {
 
     FILE* file = fopen(argv[1], "r");
     if (!file) {
-        perror("Ne mogu otvoriti fajl");
+        perror("Greška prilikom otvaranja fajla");
         return 1;
     }
 
     yyin = file;
 
-    printf("Pokrecem parsiranje fajla: %s\n\n", argv[1]);
+    printf("==> Parsiranje fajla: %s\n\n", argv[1]);
 
-    if (yyparse() == 0) {
-        printf("\nParsiranje uspjesno!\n");
+    int result = yyparse();
+
+    if (result == 0) {
+        printf("\n==> Parsiranje uspješno!\n");
     } else {
-        printf("\nParsiranje nije uspjelo.\n");
+        printf("\n==> Došlo je do greške pri parsiranju.\n");
     }
 
     fclose(file);
-    return 0;
+    return result;
 }

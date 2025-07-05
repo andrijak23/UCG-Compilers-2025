@@ -6,7 +6,7 @@ echo === Pokrecem Flex...
 flex scanner.l
 
 echo === Kompajliram sa gcc...
-gcc -o kompajler main.c parser.tab.c lex.yy.c ast.c
+gcc -o kompajler main.c parser.tab.c lex.yy.c ast.c errors.c
 
 if errorlevel 1 (
     echo === Greska prilikom kompajlacije!
@@ -14,8 +14,7 @@ if errorlevel 1 (
     exit /b
 )
 
-echo === Gotovo!
-echo.
+echo === Kompajlacija uspješna!
 
 set /p startRun="Da li zelis da odmah pokrenes kompajler.exe (test.txt)? [y/n]: "
 if /i "%startRun%"=="y" (

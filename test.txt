@@ -1,3 +1,4 @@
-IF EMPTY(res) BEGIN
-    EXEC q1;
-END
+QUERY q1 = <+alpha -beta *gamma | x:lang "en" y:region "eu">;
+RESULT_OF_QUERY q1;
+
+EXEC q1;

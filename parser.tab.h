@@ -62,8 +62,8 @@ extern int yydebug;
     IF = 263,                      /* IF  */
     FOR = 264,                     /* FOR  */
     IN = 265,                      /* IN  */
-    BEGIN_BLOCK = 266,             /* BEGIN_BLOCK  */
-    END = 267,                     /* END  */
+    BININGI = 266,                 /* BININGI  */
+    ENDERDIR = 267,                /* ENDERDIR  */
     EMPTY = 268,                   /* EMPTY  */
     NOT_EMPTY = 269,               /* NOT_EMPTY  */
     URL_EXISTS = 270,              /* URL_EXISTS  */
@@ -71,15 +71,15 @@ extern int yydebug;
     MINUS = 272,                   /* MINUS  */
     STAR = 273,                    /* STAR  */
     PIPE = 274,                    /* PIPE  */
-    EQUAL = 275,                   /* EQUAL  */
+    ASSIGN = 275,                  /* ASSIGN  */
     COLON = 276,                   /* COLON  */
     SEMICOLON = 277,               /* SEMICOLON  */
     COMMA = 278,                   /* COMMA  */
-    PLUSPLUS = 279,                /* PLUSPLUS  */
-    MINUSMINUS = 280,              /* MINUSMINUS  */
-    STARSTAR = 281,                /* STARSTAR  */
-    LT = 282,                      /* LT  */
-    GT = 283,                      /* GT  */
+    SET_UNION = 279,               /* SET_UNION  */
+    SET_DIFFERENCE = 280,          /* SET_DIFFERENCE  */
+    SET_INTERSECTION = 281,        /* SET_INTERSECTION  */
+    LANGLE = 282,                  /* LANGLE  */
+    RANGLE = 283,                  /* RANGLE  */
     LBRACKET = 284,                /* LBRACKET  */
     RBRACKET = 285,                /* RBRACKET  */
     LPAREN = 286,                  /* LPAREN  */
@@ -92,7 +92,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 16 "parser.y"
+#line 14 "parser.y"
 
     char* string;
     struct ASTNode* ast;
